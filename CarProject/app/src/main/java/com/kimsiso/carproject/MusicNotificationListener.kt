@@ -18,34 +18,34 @@ import android.widget.Toast
 import java.io.ByteArrayOutputStream
 
 class MusicNotificationListener : NotificationListenerService() {
+    private var requestReceiver: BroadcastReceiver? = null
 
     override fun onCreate() {
         super.onCreate()
-//        Log.d("MusicInfo", "🟢 서비스 시작됨. 기존 알림을 확인 중...")
+//        Log.d("App-Test", "🟢 서비스 시작됨. 기존 알림을 확인 중...")
         checkActiveNotifications() // ✅ 앱 실행 시 즉시 현재 알림 정보 확인
+
+        requestReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+//            Log.d("App-Test", "🔄 기존 알림 정보를 요청받음! 다시 확인 중...")
+                checkActiveNotifications() // ✅ 기존 알림 확인 및 재전송
+            }
+        }
 
         // 📌 메인에서 요청할 때 기존 알림을 다시 확인하는 브로드캐스트 리시버 등록
         val filter = IntentFilter("REQUEST_MUSIC_INFO")
         registerReceiver(requestReceiver, filter, Context.RECEIVER_EXPORTED)
     }
 
-    // 📌 MainActivity에서 알림 정보를 요청하면 실행되는 리시버
-    private val requestReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-//            Log.d("MusicInfo", "🔄 기존 알림 정보를 요청받음! 다시 확인 중...")
-            checkActiveNotifications() // ✅ 기존 알림 확인 및 재전송
-        }
-    }
-
     override fun onListenerConnected() {
         super.onListenerConnected()
-//        Log.d("MusicInfo", "🔄 알림 리스너 연결됨. 현재 활성화된 알림 확인 중...")
+//        Log.d("App-Test", "🔄 알림 리스너 연결됨. 현재 활성화된 알림 확인 중...")
         checkActiveNotifications()
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
-//        Log.d("MusicInfo", "🚨 알림 리스너 서비스가 비활성화됨. 재시작 필요.")
+//        Log.d("App-Test", "🚨 알림 리스너 서비스가 비활성화됨. 재시작 필요.")
     }
 
 
@@ -59,16 +59,16 @@ class MusicNotificationListener : NotificationListenerService() {
         super.onNotificationRemoved(sbn)
 
         if (sbn != null) {
-//            Log.d("MusicInfo", "🛑 음악 알림 제거됨: ${sbn.packageName}")
+//            Log.d("App-Test", "🛑 음악 알림 제거됨: ${sbn.packageName}")
         } else {
-//            Log.d("MusicInfo", "🛑 알 수 없는 알림이 제거됨")
+//            Log.d("App-Test", "🛑 알 수 없는 알림이 제거됨")
         }
 
         // 🔍 현재 활성화된 알림이 남아있는지 확인 후 실행
         if (activeNotifications.isNotEmpty()) {
             checkActiveNotifications()
         } else {
-//            Log.d("MusicInfo", "⚠️ 남아 있는 음악 알림이 없음.")
+//            Log.d("App-Test", "⚠️ 남아 있는 음악 알림이 없음.")
         }
     }
 
@@ -112,7 +112,7 @@ class MusicNotificationListener : NotificationListenerService() {
                 if (albumArt != null) {
                     val width = albumArt.width
                     val height = albumArt.height
-//                    Log.d("MusicInfo-Test", "🖼️ 최종 앨범 이미지 크기: ${width}x${height}")
+                    // Log.d("MusicInfo-Test", "🖼️ 최종 앨범 이미지 크기: ${width}x${height}")
                 }
 
 //                Log.d("MusicInfo", "🎵 감지된 음악 앱: $packageName")
@@ -156,7 +156,7 @@ class MusicNotificationListener : NotificationListenerService() {
             val byteArray = stream.toByteArray()
             intent.putExtra("album", byteArray)
         }
-//        Log.d("MusicInfo2", "🎵 음악 정보 브로드캐스트 전송됨: $songTitle - $artist")
+//        Log.d("App-Test", "🎵 음악 정보 브로드캐스트 전송됨: $songTitle - $artist")
         sendBroadcast(intent)
     }
 
@@ -173,16 +173,16 @@ class MusicNotificationListener : NotificationListenerService() {
                         ?: metadata.getBitmap(MediaMetadata.METADATA_KEY_ART) // 대체 가능 키
 
                     if (albumArt != null) {
-//                        Log.d("MusicInfo-Get", "🎨 고해상도 앨범 이미지 가져옴 (${albumArt.width}x${albumArt.height})")
+                        // Log.d("MusicInfo-Get", "🎨 고해상도 앨범 이미지 가져옴 (${albumArt.width}x${albumArt.height})")
                         return albumArt
                     }
                 }
             }
         } catch (e: SecurityException) {
-//            Log.d("MusicInfo", "🚨 MEDIA_CONTENT_CONTROL 권한이 없음! 설정에서 알림 접근을 허용하세요.", e)
+            // Log.d("MusicInfo", "🚨 MEDIA_CONTENT_CONTROL 권한이 없음! 설정에서 알림 접근을 허용하세요.", e)
             requestNotificationAccess(context) // 📌 설정 화면 열기
         }
-//        Log.d("MusicInfo-Get", "❌ FLO 미디어 세션에서 고해상도 앨범 이미지를 찾을 수 없음")
+        // Log.d("MusicInfo-Get", "❌ FLO 미디어 세션에서 고해상도 앨범 이미지를 찾을 수 없음")
         return null
     }
 
@@ -191,5 +191,14 @@ class MusicNotificationListener : NotificationListenerService() {
         val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // ✅ BroadcastReceiver가 등록되어 있으면 해제
+        requestReceiver?.let {
+            unregisterReceiver(it)
+            requestReceiver = null
+        }
     }
 }
