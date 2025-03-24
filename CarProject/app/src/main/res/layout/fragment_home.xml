@@ -1,53 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Title view"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/albumImageView"
-        app:layout_constraintStart_toEndOf="@+id/albumImageView"
-        app:layout_constraintTop_toTopOf="@+id/albumImageView" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/artistTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Artist view"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/albumImageView"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <TextView
+                android:id="@+id/timeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="00:00"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/white"
+                android:textSize="96sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="2025.01.30 (월)"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="@+id/timeTextView"
+                app:layout_constraintStart_toStartOf="@+id/timeTextView"
+                app:layout_constraintTop_toBottomOf="@+id/timeTextView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/albumImageView"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="180dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/artistTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:text="Artist view"
+        android:textColor="@color/gray"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/albumImageView"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:text="Title view"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        app:layout_constraintStart_toEndOf="@+id/albumImageView"
+        app:layout_constraintTop_toTopOf="@+id/albumImageView" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:tint="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/artistTextView"
+        app:layout_constraintTop_toBottomOf="@+id/artistTextView"
+        app:srcCompat="@drawable/prev_track" />
 
     <Button
         android:id="@+id/prevButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="204dp"
         android:layout_marginTop="16dp"
         android:text="Prev"
-        app:layout_constraintStart_toStartOf="@+id/albumImageView"
-        app:layout_constraintTop_toBottomOf="@+id/albumImageView" />
+        app:layout_constraintStart_toStartOf="@+id/artistTextView"
+        app:layout_constraintTop_toBottomOf="@+id/artistTextView" />
 
     <Button
         android:id="@+id/playButton"
@@ -70,35 +130,14 @@
         app:layout_constraintTop_toTopOf="@+id/playButton" />
 
     <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Date"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/prevButton"
-        app:layout_constraintTop_toBottomOf="@+id/prevButton" />
-
-    <TextView
-        android:id="@+id/timeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Time"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/dateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
-
-    <TextView
         android:id="@+id/gpsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="0 Km/h"
         android:textColor="@color/white"
         android:textSize="60sp"
-        app:layout_constraintStart_toStartOf="@+id/timeTextView"
-        app:layout_constraintTop_toBottomOf="@+id/timeTextView" />
+        tools:layout_editor_absoluteX="368dp"
+        tools:layout_editor_absoluteY="200dp" />
 
     <TextView
         android:id="@+id/gpsSignalTextView"
@@ -132,13 +171,11 @@
 
     <TextView
         android:id="@+id/betteryTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="42dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Battery view"
+        android:text="100%"
+        android:textAlignment="viewEnd"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/timeTextView"
-        app:layout_constraintStart_toEndOf="@+id/timeTextView"
-        app:layout_constraintTop_toTopOf="@+id/timeTextView" />
+        tools:layout_editor_absoluteX="682dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

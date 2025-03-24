@@ -18,8 +18,8 @@ class SystemManager(private val context: Context) {
     private lateinit var batteryTextView: TextView
 
     private val handler = Handler(Looper.getMainLooper())
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy.MM.dd (EEE)", Locale.getDefault())
+    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     private var batteryReceiver: BroadcastReceiver? = null
 
@@ -60,7 +60,7 @@ class SystemManager(private val context: Context) {
                     val scale = it.getIntExtra(BatteryManager.EXTRA_SCALE, -1) // 최대값 (보통 100)
                     if (level >= 0 && scale > 0) {
                         val batteryPct = (level * 100) / scale // 배터리 퍼센트 계산
-                        batteryTextView.text = "배터리 잔량: $batteryPct%"
+                        batteryTextView.text = "$batteryPct%"
                     }
                 }
             }
