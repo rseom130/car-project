@@ -115,10 +115,10 @@ class MusicNotificationListener : NotificationListenerService() {
                     // Log.d("MusicInfo-Test", "🖼️ 최종 앨범 이미지 크기: ${width}x${height}")
                 }
 
-//                Log.d("MusicInfo", "🎵 감지된 음악 앱: $packageName")
-//                Log.d("MusicInfo", "🎶 제목: $title")
-//                Log.d("MusicInfo", "🎤 가수: $artist")
-//                Log.d("MusicInfo", "🖼️ 앨범 이미지: ${if (albumArt != null) "있음" else "없음"}")
+                Log.d("MusicInfo", "🎵 감지된 음악 앱: $packageName")
+                Log.d("MusicInfo", "🎶 제목: $title")
+                Log.d("MusicInfo", "🎤 가수: $artist")
+                Log.d("MusicInfo", "🖼️ 앨범 이미지: ${if (albumArt != null) "있음" else "없음"}")
 
                 sendMusicInfoToActivity(title, artist, albumArt)
             }

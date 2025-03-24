@@ -1,57 +1,26 @@
 package com.kimsiso.carproject
 
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.location.Location
-import android.media.session.MediaSessionManager
-import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings
-import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationServices
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import com.google.android.gms.location.*
-import com.google.android.gms.location.LocationRequest
-import android.Manifest
-import android.annotation.SuppressLint
-import android.location.GnssStatus
-import android.location.LocationManager
-import android.os.BatteryManager
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import kotlin.math.roundToInt
+import android.content.res.Configuration
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import com.kimsiso.carproject.screen.GpsFragment
+import com.kimsiso.carproject.screen.HomeFragment
+import com.kimsiso.carproject.screen.MusicFragment
+import com.kimsiso.carproject.screen.OffFragment
+import com.kimsiso.carproject.screen.PictureFragment
 
 
+@Suppress("NAME_SHADOWING")
 class MainActivity : AppCompatActivity() {
-    // MusicController 클래스 선언
-    private lateinit var musicController: MusicController
-
-    // GpsManager 클래스 선언
-    private lateinit var gpsManager: GpsManager
-
-    // SystemManager 클래스 선언
-    private lateinit var systemManager: SystemManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,95 +28,84 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // 전체화면 모드 적용
-        window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-            val controller = view.windowInsetsController
-            if (controller != null) {
-                controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                controller.systemBarsBehavior =
-                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        enableFullScreenMode()
+
+        // ✅ 현재 화면이 가로 모드인지 확인
+        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+        if (isLandscape) {
+            // 가로 모드 (왼쪽 메뉴 사용)
+            val sideNavigationView = findViewById<NavigationView>(R.id.side_navigation)
+            val sideNavigationView2 = findViewById<NavigationView>(R.id.side_navigation2)
+            applyBottomPaddingForNavigationView(sideNavigationView2)
+
+            sideNavigationView.setNavigationItemSelectedListener { item ->
+                handleNavigation(item.itemId)
+                true
             }
-            view.onApplyWindowInsets(insets)
+        } else {
+            // 세로 모드 (하단 메뉴 사용)
+            val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+            applyBottomPaddingForNavigationView(bottomNavigationView)
+
+            bottomNavigationView.setOnItemSelectedListener { item ->
+                handleNavigation(item.itemId)
+                true
+            }
         }
+
 
         // 화면 켜짐 유지
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        // MusicController 초기화 및 바인딩
-        musicController = MusicController(this)
-        musicController.bindViews(
-            findViewById(R.id.titleTextView),
-            findViewById(R.id.artistTextView),
-            findViewById(R.id.albumImageView),
-            findViewById(R.id.playButton),
-            findViewById(R.id.nextButton),
-            findViewById(R.id.prevButton)
-        )
-
-        gpsManager = GpsManager(this)
-        gpsManager.bindViews(
-            findViewById(R.id.gpsTextView),
-            findViewById(R.id.gpsSignalTextView),
-            findViewById(R.id.gpsTestTextView)
-        )
-        gpsManager.initializePermissionLauncher(this)
-        gpsManager.checkAndRequestPermission()
-
-        // ✅ SystemManager 초기화 및 UI 요소 바인딩
-        systemManager = SystemManager(this)
-        systemManager.bindViews(
-            findViewById(R.id.dateTextView),
-            findViewById(R.id.timeTextView),
-            findViewById(R.id.betteryTextView),
-            findViewById(R.id.refreshButton)
-        )
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // MusicController 리시버 등록
-        musicController.registerReceiver()
-        val intent = Intent("REQUEST_MUSIC_INFO")
-        sendBroadcast(intent)
-
-        // GpsManager 시작
-        gpsManager.startGpsUpdates()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        // musicController 리시버 종료
-        if (::musicController.isInitialized) {
-            musicController.unregisterReceiver()
-        }
-
-        // GpsManager 중지
-        if (::gpsManager.isInitialized) { // 🔥 gpsManager가 초기화된 경우에만 실행
-            gpsManager.stopGpsUpdates()
-        }
-
-        // SystemManager 중지
-        if (::systemManager.isInitialized) {
-            systemManager.destroy() // ✅ 시스템 관리 정리
+        // 초기 화면 설정 (홈 화면)
+        if (savedInstanceState == null) {
+            replaceFragment(HomeFragment())
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        // musicController 리시버 종료
-        if (::musicController.isInitialized) {
-            musicController.unregisterReceiver()
+    // ✅ 소프트키 높이만큼 패딩을 자동 조절하는 함수 (공통)
+    private fun applyBottomPaddingForNavigationView(view: View) {
+        view.setOnApplyWindowInsetsListener { v, insets ->
+            val systemBars = insets.getInsets(WindowInsets.Type.systemBars())
+            v.setPadding(0, 0, 0, systemBars.bottom) // ✅ 소프트키 높이만큼 자동 조절
+            insets
         }
-        // GpsManager 중지
-        if (::gpsManager.isInitialized) { // 🔥 gpsManager가 초기화된 경우에만 실행
-            gpsManager.stopGpsUpdates()
-        }
+    }
 
-        // SystemManager 중지
-        if (::systemManager.isInitialized) {
-            systemManager.destroy() // ✅ 시스템 관리 정리
+
+    // ✅ 네비게이션 아이템 클릭 시 화면 변경
+    private fun handleNavigation(itemId: Int) {
+        when (itemId) {
+            R.id.nav_home -> replaceFragment(HomeFragment())
+            R.id.nav_picture -> replaceFragment(PictureFragment())
+            R.id.nav_gps -> replaceFragment(GpsFragment())
+            R.id.nav_music -> replaceFragment(MusicFragment())
+            R.id.nav_off -> replaceFragment(OffFragment())
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container, fragment)
+            .commit()
+    }
+
+    private fun enableFullScreenMode() {
+        window.decorView.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.let { controller ->
+                    controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                    controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
+            } else {
+                systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+            }
         }
     }
 

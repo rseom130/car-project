@@ -50,6 +50,9 @@ dependencies {
     // Google Play Services 위치 서비스 (GPS 기능)
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    // 하단 내비게이션 바
+    implementation("com.google.android.material:material:1.9.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

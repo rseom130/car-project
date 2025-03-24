@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.google.android.gms.location.*
 import kotlin.math.roundToInt
 
@@ -25,13 +26,16 @@ class GpsManager(
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
+    private var locationCallback: LocationCallback? = null // 🔥 Nullable (`?`) 추가
     private lateinit var locationManager: LocationManager
-    private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     private var lastLocation: Location? = null
     private var lastUpdateTime: Long = 0
     private var gpsSignalCount: Int = 0
+
+    private var isGpsStarted = false // ✅ GPS가 이미 실행 중인지 확인
+    private var gnssStatusCallback: GnssStatus.Callback? = null
+    private var permissionLauncher: ActivityResultLauncher<String>? = null
 
     // UI 요소 바인딩
     fun bindViews(gpsTextView: TextView, gpsSignalTextView: TextView, gpsTestTextView: TextView) {
@@ -40,8 +44,8 @@ class GpsManager(
         this.gpsTestTextView = gpsTestTextView
     }
 
-    fun initializePermissionLauncher(activity: androidx.activity.ComponentActivity) {
-        permissionLauncher = activity.registerForActivityResult(
+    fun initializePermissionLauncher(fragment: Fragment) {
+        permissionLauncher = fragment.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
             if (isGranted) {
@@ -53,10 +57,10 @@ class GpsManager(
     }
 
     fun checkAndRequestPermission() {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startGpsUpdates()
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionLauncher?.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            startGpsUpdates()
         }
     }
 
@@ -77,11 +81,14 @@ class GpsManager(
             }
         }
 
-        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-        registerGnssStatusListener()
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback!!, Looper.getMainLooper())
+            registerGnssStatusListener() // ✅ GPS 위성 리스너 등록
+            isGpsStarted = true // ✅ GPS 시작 상태 변경
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -142,8 +149,19 @@ class GpsManager(
     }
 
     fun stopGpsUpdates() {
-        if (::fusedLocationClient.isInitialized) {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
+        locationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
+            locationCallback = null
+        }
+        unregisterGnssStatusListener()
+        isGpsStarted = false // ✅ GPS 중지 상태로 변경
+    }
+
+    private fun unregisterGnssStatusListener() {
+        gnssStatusCallback?.let {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager.unregisterGnssStatusCallback(it)
+            gnssStatusCallback = null
         }
     }
 }

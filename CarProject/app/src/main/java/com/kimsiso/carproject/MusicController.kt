@@ -27,6 +27,7 @@ class MusicController(private val context: Context) {
     private var playButton: Button? = null
     private var nextButton: Button? = null
     private var prevButton: Button? = null
+    private var isReceiverRegistered = false // ✅ 리시버 등록 여부 확인
 
     init {
         // 알림 리스너 서비스 접근 권한 확인
