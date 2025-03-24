@@ -64,8 +64,8 @@ class MainActivity : AppCompatActivity() {
 
         // 초기 화면 설정 (홈 화면)
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
-            updateButtonTint(homeButton)
+            replaceFragment(PictureFragment())
+            updateButtonTint(pictureButton)
         }
 
         homeButton.setOnClickListener({
