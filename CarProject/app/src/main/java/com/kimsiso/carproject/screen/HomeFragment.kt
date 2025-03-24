@@ -26,7 +26,6 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         // MusicController 초기화 및 바인딩
         musicController = MusicController(requireContext())
         musicController.bindViews(
@@ -38,6 +37,7 @@ class HomeFragment : Fragment() {
             view.findViewById(R.id.prevButton)
         )
 
+        // GpsManager 초기화 및 UI 요소 바인딩
         gpsManager = GpsManager(requireContext())
         gpsManager.bindViews(
             view.findViewById(R.id.gpsTextView),
@@ -52,8 +52,7 @@ class HomeFragment : Fragment() {
         systemManager.bindViews(
             view.findViewById(R.id.dateTextView),
             view.findViewById(R.id.timeTextView),
-            view.findViewById(R.id.betteryTextView),
-            view.findViewById(R.id.refreshButton)
+            view.findViewById(R.id.betteryTextView)
         )
     }
 

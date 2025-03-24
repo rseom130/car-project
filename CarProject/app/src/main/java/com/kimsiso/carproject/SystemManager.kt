@@ -16,7 +16,6 @@ class SystemManager(private val context: Context) {
     private lateinit var dateTextView: TextView
     private lateinit var timeTextView: TextView
     private lateinit var batteryTextView: TextView
-    private lateinit var refreshButton: Button
 
     private val handler = Handler(Looper.getMainLooper())
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -25,21 +24,13 @@ class SystemManager(private val context: Context) {
     private var batteryReceiver: BroadcastReceiver? = null
 
     // UI 요소 바인딩
-    fun bindViews(dateTextView: TextView, timeTextView: TextView, batteryTextView: TextView, refreshButton: Button) {
+    fun bindViews(dateTextView: TextView, timeTextView: TextView, batteryTextView: TextView) {
         this.dateTextView = dateTextView
         this.timeTextView = timeTextView
         this.batteryTextView = batteryTextView
-        this.refreshButton = refreshButton
 
         startUpdatingTime()
         registerBatteryReceiver()
-
-        // 🔄 화면 새로고침 버튼 설정
-        refreshButton.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            (context as? MainActivity)?.finish() // 현재 액티비티 종료
-            context.startActivity(intent) // 새로운 액티비티 시작
-        }
     }
 
     // ✅ 날짜 및 시간 업데이트

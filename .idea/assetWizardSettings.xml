@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_music" />
-                            <entry key="sourceFile" value="C:\Users\kimss\Downloads\volume.svg" />
+                            <entry key="outputName" value="prev_track" />
+                            <entry key="sourceFile" value="D:\SELF2\frame.kimss.info\images\svg\previous track.svg" />
                           </map>
                         </option>
                       </PersistentState>

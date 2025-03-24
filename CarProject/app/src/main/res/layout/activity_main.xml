@@ -13,22 +13,78 @@
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/black"
         android:fitsSystemWindows="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@id/bottomLinear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <LinearLayout
+        android:id="@+id/bottomLinear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        android:layout_height="80dp"
+        android:background="@color/black"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        tools:ignore="MissingConstraints"
-        app:labelVisibilityMode="unlabeled"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_home"
+            app:tint="@color/gray" />
+
+        <ImageButton
+            android:id="@+id/pictureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_picture"
+            app:tint="@color/gray" />
+
+        <ImageButton
+            android:id="@+id/gpsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_gps"
+            app:tint="@color/gray" />
+
+        <ImageButton
+            android:id="@+id/musicButton"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_music"
+            app:tint="@color/gray" />
+
+        <ImageButton
+            android:id="@+id/offButton"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_off"
+            app:tint="@color/gray" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

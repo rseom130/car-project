@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -11,6 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:text="Title view"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/albumImageView"
         app:layout_constraintStart_toEndOf="@+id/albumImageView"
@@ -23,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Artist view"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/albumImageView"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
@@ -72,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Date"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/prevButton"
         app:layout_constraintTop_toBottomOf="@+id/prevButton" />
 
@@ -81,6 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Time"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/dateTextView"
         app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
 
@@ -90,6 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="0 Km/h"
+        android:textColor="@color/white"
         android:textSize="60sp"
         app:layout_constraintStart_toStartOf="@+id/timeTextView"
         app:layout_constraintTop_toBottomOf="@+id/timeTextView" />
@@ -100,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="gps signal view"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/gpsTextView"
         app:layout_constraintTop_toBottomOf="@+id/gpsTextView" />
 
@@ -109,6 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="gps test view"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/gpsTextView"
         app:layout_constraintStart_toEndOf="@+id/gpsTextView"
         app:layout_constraintTop_toTopOf="@+id/gpsTextView" />
@@ -128,6 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="Battery view"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/timeTextView"
         app:layout_constraintStart_toEndOf="@+id/timeTextView"
         app:layout_constraintTop_toTopOf="@+id/timeTextView" />

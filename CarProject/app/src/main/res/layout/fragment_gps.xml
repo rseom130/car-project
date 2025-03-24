@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <TextView
+        android:id="@+id/gpsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="0 Km/h"
+        android:textColor="@color/white"
+        android:textSize="60sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/gpsSignalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="gps signal view"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/gpsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/gpsTextView" />
+
+    <TextView
+        android:id="@+id/gpsTestTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="gps test view"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/gpsTextView"
+        app:layout_constraintStart_toEndOf="@+id/gpsTextView"
+        app:layout_constraintTop_toTopOf="@+id/gpsTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,11 +11,12 @@
         android:id="@+id/main_fragment_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@color/black"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sideLnear"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
@@ -24,26 +25,71 @@
         android:id="@+id/sideLnear"
         android:layout_width="80dp"
         android:layout_height="match_parent"
+        android:background="@color/black"
         android:orientation="vertical"
         android:textAlignment="center"
         tools:ignore="ExtraText,MissingConstraints">
 
-        <!-- ✅ 세로 모드에서는 하단 네비게이션 -->
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/side_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="?android:attr/windowBackground"
-            app:menu="@menu/side_nav_menu" />
-
-        <!-- ✅ 하단에 OFF 버튼 고정 -->
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/side_navigation2"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            app:menu="@menu/off_nav_menu" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/homeButton2"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_home"
+                app:tint="@color/gray" />
+
+            <ImageButton
+                android:id="@+id/pictureButton2"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_picture"
+                app:tint="@color/gray" />
+
+            <ImageButton
+                android:id="@+id/gpsButton2"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_gps"
+                app:tint="@color/gray" />
+
+            <ImageButton
+                android:id="@+id/musicButton2"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_music"
+                app:tint="@color/gray" />
+
+            <ImageButton
+                android:id="@+id/offButton2"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_off"
+                app:tint="@color/gray" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.kimsiso.carproject
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
@@ -8,7 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.*
 import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.view.View
+import android.widget.ImageButton
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -19,9 +24,14 @@ import com.kimsiso.carproject.screen.OffFragment
 import com.kimsiso.carproject.screen.PictureFragment
 
 
-@Suppress("NAME_SHADOWING")
 class MainActivity : AppCompatActivity() {
+    private lateinit var homeButton : ImageButton
+    private lateinit var pictureButton : ImageButton
+    private lateinit var gpsButton : ImageButton
+    private lateinit var musicButton : ImageButton
+    private lateinit var offButton : ImageButton
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,25 +45,19 @@ class MainActivity : AppCompatActivity() {
 
         if (isLandscape) {
             // 가로 모드 (왼쪽 메뉴 사용)
-            val sideNavigationView = findViewById<NavigationView>(R.id.side_navigation)
-            val sideNavigationView2 = findViewById<NavigationView>(R.id.side_navigation2)
-            applyBottomPaddingForNavigationView(sideNavigationView2)
-
-            sideNavigationView.setNavigationItemSelectedListener { item ->
-                handleNavigation(item.itemId)
-                true
-            }
+            homeButton = findViewById(R.id.homeButton2)
+            pictureButton = findViewById(R.id.pictureButton2)
+            gpsButton = findViewById(R.id.gpsButton2)
+            musicButton = findViewById(R.id.musicButton2)
+            offButton = findViewById(R.id.offButton2)
         } else {
             // 세로 모드 (하단 메뉴 사용)
-            val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-            applyBottomPaddingForNavigationView(bottomNavigationView)
-
-            bottomNavigationView.setOnItemSelectedListener { item ->
-                handleNavigation(item.itemId)
-                true
-            }
+            homeButton = findViewById(R.id.homeButton)
+            pictureButton = findViewById(R.id.pictureButton)
+            gpsButton = findViewById(R.id.gpsButton)
+            musicButton = findViewById(R.id.musicButton)
+            offButton = findViewById(R.id.offButton)
         }
-
 
         // 화면 켜짐 유지
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -61,6 +65,31 @@ class MainActivity : AppCompatActivity() {
         // 초기 화면 설정 (홈 화면)
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
+            updateButtonTint(homeButton)
+        }
+
+        homeButton.setOnClickListener({
+            replaceFragment(HomeFragment())
+            updateButtonTint(homeButton)
+        })
+        pictureButton.setOnClickListener {
+            replaceFragment(PictureFragment())
+            updateButtonTint(pictureButton)
+        }
+
+        gpsButton.setOnClickListener {
+            replaceFragment(GpsFragment())
+            updateButtonTint(gpsButton)
+        }
+
+        musicButton.setOnClickListener {
+            replaceFragment(MusicFragment())
+            updateButtonTint(musicButton)
+        }
+
+        offButton.setOnClickListener {
+            replaceFragment(OffFragment())
+            updateButtonTint(offButton)
         }
     }
 
@@ -71,24 +100,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(0, 0, 0, systemBars.bottom) // ✅ 소프트키 높이만큼 자동 조절
             insets
         }
-    }
-
-
-    // ✅ 네비게이션 아이템 클릭 시 화면 변경
-    private fun handleNavigation(itemId: Int) {
-        when (itemId) {
-            R.id.nav_home -> replaceFragment(HomeFragment())
-            R.id.nav_picture -> replaceFragment(PictureFragment())
-            R.id.nav_gps -> replaceFragment(GpsFragment())
-            R.id.nav_music -> replaceFragment(MusicFragment())
-            R.id.nav_off -> replaceFragment(OffFragment())
-        }
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .commit()
     }
 
     private fun enableFullScreenMode() {
@@ -109,4 +120,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ✅ Fragment 변경 메서드
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_fragment_container, fragment)
+            .commit()
+    }
+
+    // ✅ 버튼 Tint 색상 업데이트 메서드
+    private fun updateButtonTint(selectedButton: ImageButton) {
+        val whiteColor = ContextCompat.getColor(this, R.color.white)
+        val grayColor = ContextCompat.getColor(this, R.color.gray)
+
+        // 모든 버튼을 grayColor로 변경
+        listOf(homeButton, pictureButton, gpsButton, musicButton, offButton).forEach { button ->
+            button.setColorFilter(grayColor, PorterDuff.Mode.SRC_IN)
+        }
+
+        // 클릭된 버튼만 whiteColor로 변경
+        selectedButton.setColorFilter(whiteColor, PorterDuff.Mode.SRC_IN)
+    }
 }
